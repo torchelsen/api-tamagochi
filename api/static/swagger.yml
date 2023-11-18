@@ -1,0 +1,217 @@
+swagger: "2.0"
+info:
+  title: "Tamagochi API"
+  description: "A documentação abaixo descreve o funcionamento da API do Tamagochi."
+  version: "2.0.0"
+host: "127.0.0.1:5000"
+basePath: "/"
+schemes:
+  - "http"
+tags:
+  - name: "Parent"
+    description: "Operações relacionadas a Parents"
+  - name: "Child"
+    description: "Operations related to children"
+  - name: "Task"
+    description: "Operations related to tasks"
+
+paths:
+  paths:
+  /parent/create_child:
+    post:
+      summary: Create a child
+      description: Create a new child for the authenticated parent.
+      security:
+        - BearerAuth: []
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: child
+          description: Child data
+          required: true
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+              surname:
+                type: string
+              gender:
+                type: string
+            required:
+              - name
+              - surname
+              - gender
+      responses:
+        200:
+          description: Child created successfully.
+        400:
+          description: Invalid or incomplete data.
+
+  /parent/create_task:
+    post:
+      summary: Create a task
+      description: Create a new task for the authenticated parent.
+      security:
+        - BearerAuth: []
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: task
+          description: Task data
+          required: true
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+              description:
+                type: string
+              period:
+                type: string
+              frequency:
+                type: string
+              is_visible:
+                type: boolean
+            required:
+              - name
+              - description
+              - period
+              - frequency
+      responses:
+        200:
+          description: Task created successfully.
+        400:
+          description: Invalid or incomplete data.
+
+  /parent/assign_task_to_child:
+    post:
+      summary: Assign a task to a child
+      description: Assign a task to a specific child.
+      security:
+        - BearerAuth: []
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: assignment
+          description: Assignment data
+          required: true
+          schema:
+            type: object
+            properties:
+              child_id:
+                type: integer
+              task_id:
+                type: integer
+            required:
+              - child_id
+              - task_id
+      responses:
+        200:
+          description: Task assigned to child successfully.
+        400:
+          description: Invalid or incomplete data.
+        500:
+          description: Internal server error.
+
+  /task/get_task/{task_id}:
+    get:
+      summary: Get a task by ID
+      description: Retrieve details of a specific task by its ID.
+      produces:
+        - application/json
+      parameters:
+        - name: task_id
+          in: path
+          description: ID of the task to retrieve
+          required: true
+          type: integer
+      responses:
+        200:
+          description: Task details retrieved successfully.
+        404:
+          description: Task not found.
+        500:
+          description: Internal server error.
+
+  /task/get_all_tasks:
+    get:
+      summary: Get all tasks
+      description: Retrieve details of all tasks.
+      produces:
+        - application/json
+      responses:
+        200:
+          description: All tasks retrieved successfully.
+        500:
+          description: Internal server error.
+
+  /task/update_task/{task_id}:
+    put:
+      summary: Update a task by ID
+      description: Update details of a specific task by its ID.
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - name: task_id
+          in: path
+          description: ID of the task to update
+          required: true
+          type: integer
+        - in: body
+          name: task
+          description: Updated task data
+          required: true
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+              description:
+                type: string
+              period:
+                type: string
+              frequency:
+                type: string
+              is_visible:
+                type: boolean
+      responses:
+        200:
+          description: Task updated successfully.
+        400:
+          description: Invalid or incomplete data.
+        404:
+          description: Task not found.
+        500:
+          description: Internal server error.
+
+  /task/delete_task/{task_id}:
+    delete:
+      summary: Delete a task by ID
+      description: Delete a specific task by its ID.
+      produces:
+        - application/json
+      parameters:
+        - name: task_id
+          in: path
+          description: ID of the task to delete
+          required: true
+          type: integer
+      responses:
+        200:
+          description: Task deleted successfully.
+        404:
+          description: Task not found.
+        500:
+          description: Internal server error.

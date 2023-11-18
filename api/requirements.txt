@@ -1,0 +1,14 @@
+Flask      
+Flask-RESTful 
+Flask-Login     
+Flask-Bcrypt
+bcrypt
+Flask-SQLAlchemy
+SQLAlchemy
+pymysql
+marshmallow
+flask-marshmallow
+Flask-JWT-Extended
+Flask-CORS
+requests
+Flask-Swagger-UI
