@@ -1,12 +1,67 @@
 from flask import Blueprint, jsonify, request
 from flask_login import login_required, current_user
-from database.models import Child, Task, db
+from database.models import Parent, Child, Task, db
 
 parent_blueprint = Blueprint("parent", __name__, url_prefix="/parent")
 
 def init_app(app):
     # Your initialization logic here
     app.register_blueprint(parent_blueprint)
+
+# LISTA UM PARENT PELO ID
+@parent_blueprint.route("/get_parent/<int:parent_id>", methods=["GET"])
+def get_parent(parent_id):
+    try:
+        parent = Parent.query.get(parent_id)
+
+        if parent:
+            parent_data = {
+                "id": parent.id,
+                "name": parent.name,
+                "surname": parent.surname,
+                "email": parent.email,
+                "gender": parent.gender,
+                "children": [
+                        {
+                            "id": child.id,
+                            "name": child.name,
+                            "surname": child.surname,
+                            "gender": child.gender,
+                        }
+                        for child in parent.children
+                    ],
+        }
+
+        return jsonify(status=200, parent=parent_data)
+    except Exception as e:
+        return jsonify(status=500, message="Erro interno ao obter parent.", error=str(e))
+   
+# LISTA TODOS OS PARENTS 
+@parent_blueprint.route("/get_all_parents", methods=["GET"])
+def get_all_parents():
+    try:
+        all_parents = Parent.query.all()
+
+        parent_data = [{
+            "id": parent.id,
+            "name": parent.name,
+            "surname": parent.surname,
+            "email": parent.email,
+            "gender": parent.gender,
+            "children": [
+                        {
+                            "id": child.id,
+                            "name": child.name,
+                            "surname": child.surname,
+                            "gender": child.gender,
+                        }
+                        for child in parent.children
+                    ],
+        } for parent in all_parents]
+
+        return jsonify(status=200, parents=parent_data)
+    except Exception as e:
+        return jsonify(status=500, message="Erro interno ao obter todas os parents.", error=str(e))
 
 # CRIA CHILD
 @parent_blueprint.route("/create_child", methods=["POST"])
@@ -23,7 +78,6 @@ def create_child():
     db.session.commit()
 
     return jsonify(status=200, message="Filho adicionado com sucesso.")
-
 
 # CRIA TASK
 @parent_blueprint.route("/create_task", methods=["POST"])

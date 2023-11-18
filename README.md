@@ -42,6 +42,8 @@
     /logout (POST)
 
 ### parent_routes:
+    /get_parent (GET)
+    /get_all_parents (GET)
     /create_child (POST)
     /create_task (POST)
     /assign_task_to_child (POST)

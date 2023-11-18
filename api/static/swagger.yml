@@ -105,6 +105,47 @@ paths:
         200:
           description: "Logout successful."
 
+  /parent/get_parent/{parent_id}:
+    get:
+      tags:
+        - "Parent"
+      summary: "Get parent by ID"
+      description: "Retrieve details of a parent by ID."
+      security:
+        - BearerAuth: []  # Assuming Bearer token authentication
+      parameters:
+        - in: path
+          name: parent_id
+          required: true
+          schema:
+            type: integer
+          description: "ID of the parent to retrieve"
+      responses:
+        '200':
+          description: "Parent retrieved successfully."
+        '401':
+          description: "Unauthorized."
+        '404':
+          description: "Parent not found."
+        '500':
+          description: "Internal server error."
+
+  /parent/get_all_parents:
+    get:
+      tags:
+        - "Parent"
+      summary: "Get all parents"
+      description: "Retrieve details of all parents."
+      security:
+        - BearerAuth: []  # Assuming Bearer token authentication
+      responses:
+        '200':
+          description: "Parents retrieved successfully."
+        '401':
+          description: "Unauthorized."
+        '500':
+          description: "Internal server error."
+
   /parent/create_child:
     post:
       tags:

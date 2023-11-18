@@ -8,6 +8,25 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 db = SQLAlchemy(app)
 
+class Parent(db.Model, UserMixin):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(20), nullable=False, unique=False)
+    surname = db.Column(db.String(20), nullable=False, unique=False)
+    email = db.Column(db.String(80), nullable=False, unique=True)
+    password = db.Column(db.String(80), nullable=False)
+    gender = db.Column(db.String(15), nullable=False, unique=False)
+    children = relationship('Child', back_populates='parent', cascade='all, delete-orphan')
+    
+class Child(db.Model, UserMixin):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(20), nullable=False, unique=False)
+    surname = db.Column(db.String(20), nullable=False, unique=False)
+    gender = db.Column(db.String(15), nullable=False, unique=False)
+    parent_id = db.Column(db.Integer, db.ForeignKey('parent.id'))
+    parent = relationship('Parent', back_populates='children')
+    tasks = relationship('Task', secondary='child_task')
+    inventory = relationship('Inventory', back_populates='child')
+    
 class Item(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(45), nullable=False)
@@ -30,24 +49,7 @@ class StyleTamagochi(db.Model):
     glasses_item = relationship('Item', foreign_keys=[glasses])
     scenario_item = relationship('Item', foreign_keys=[scenario])
 
-class Parent(db.Model, UserMixin):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(20), nullable=False, unique=False)
-    surname = db.Column(db.String(20), nullable=False, unique=False)
-    email = db.Column(db.String(80), nullable=False, unique=True)
-    password = db.Column(db.String(80), nullable=False)
-    gender = db.Column(db.String(15), nullable=False, unique=False)
-    children = relationship('Child', back_populates='parent')
 
-class Child(db.Model, UserMixin):
-    id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(20), nullable=False, unique=False)
-    surname = db.Column(db.String(20), nullable=False, unique=False)
-    gender = db.Column(db.String(15), nullable=False, unique=False)
-    parent_id = db.Column(db.Integer, db.ForeignKey('parent.id'))
-    parent = relationship('Parent', back_populates='children')
-    tasks = relationship('Task', secondary='child_task')
-    inventory = relationship('Inventory', back_populates='child')
 
 class Inventory(db.Model):
     id = db.Column(db.Integer, primary_key=True)
