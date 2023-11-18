@@ -4,6 +4,10 @@ from database.models import Child, Task, db
 
 parent_blueprint = Blueprint("parent", __name__, url_prefix="/parent")
 
+def init_app(app):
+    # Your initialization logic here
+    app.register_blueprint(parent_blueprint)
+
 # CRIA CHILD
 @parent_blueprint.route("/create_child", methods=["POST"])
 @login_required

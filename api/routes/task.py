@@ -5,6 +5,10 @@ from database.models import Child, Task, db, ChildTask
 
 task_blueprint = Blueprint("task", __name__)
 
+def init_app(app):
+    # Your initialization logic here
+    app.register_blueprint(task_blueprint)
+
 
 @task_blueprint.route("/get_task/<int:task_id>", methods=["GET"])
 @login_required
