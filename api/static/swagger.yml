@@ -18,7 +18,7 @@ tags:
     description: "Operations related to tasks"
 
 paths:
-  /register:
+  /auth/register:
     post:
       tags:
         - "Auth"
@@ -36,20 +36,29 @@ paths:
           schema:
             type: object
             properties:
-              username:
+              name:
+                type: string
+              surname:
+                type: string
+              email:
                 type: string
               password:
                 type: string
+              gender:
+                type: string
             required:
+              - name
+              - surname
               - username
               - password
+              - gender
       responses:
         200:
           description: "User registered successfully."
         400:
           description: "Invalid or incomplete data."
 
-  /login:
+  /auth/login:
     post:
       tags:
         - "Auth"
@@ -67,7 +76,7 @@ paths:
           schema:
             type: object
             properties:
-              username:
+              email:
                 type: string
               password:
                 type: string
@@ -80,7 +89,7 @@ paths:
         401:
           description: "Authentication failed."
 
-  /logout:
+  /auth/logout:
     post:
       tags:
         - "Auth"

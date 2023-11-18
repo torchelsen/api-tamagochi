@@ -7,8 +7,10 @@ from flask_restful import Api
 from flask_swagger_ui import get_swaggerui_blueprint
 from routes.task import task_blueprint, init_app as init_task_app
 from routes.parent import parent_blueprint, init_app as init_parent_app
+from routes.auth import auth_blueprint, init_app as init_auth_app
 from database.models import Parent, db, app
 from flask_login import LoginManager, login_manager
+
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'chave_secreta'
@@ -33,6 +35,7 @@ def load_user(user_id):
         return None
 
 # Inicialização de blueprints
+init_auth_app(app)
 init_task_app(app)
 init_parent_app(app)
 
