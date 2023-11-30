@@ -3,9 +3,11 @@ from flask_login import login_required, current_user
 from database.models import Child, Parent, db
 
 child_blueprint = Blueprint("child", __name__, url_prefix="/child")
+def init_app(app):
+    # Your initialization logic here
+    app.register_blueprint(child_blueprint)
 
-
-@child_blueprint.route("/get_child", methods=["GET"])
+@child_blueprint.route("/get_child/<int:child_id>", methods=["GET"])
 @login_required
 def get_child(child_id):
     try:
@@ -45,7 +47,7 @@ def get_all_childs():
     except Exception as e:
         return jsonify(status=500, message="Erro interno ao obter todas as crianças.", error=str(e))
 
-@child_blueprint.route("/update_child", methods=["PUT"])
+@child_blueprint.route("/update_child/<int:child_id>", methods=["PUT"])
 @login_required
 def update_child(child_id):
     try:
@@ -70,7 +72,7 @@ def update_child(child_id):
     except Exception as e:
         return jsonify(status=500, message="Erro interno ao atualizar criança.", error=str(e))
 
-@child_blueprint.route("/delete_child", methods=["DELETE"])
+@child_blueprint.route("/delete_child/<int:child_id>", methods=["DELETE"])
 @login_required
 def delete_child(child_id):
     try:
