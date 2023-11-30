@@ -378,7 +378,7 @@ paths:
         500:
           description: "Internal server error."
 
-  /task/get_task:
+  /task/get_task/{task_id}:
     get:
       tags:
         - "Task"
@@ -387,11 +387,12 @@ paths:
       produces:
         - application/json
       parameters:
-        - name: task_id
-          in: query
-          description: "ID of the task to retrieve"
+        - in: path
+          name: task_id
           required: true
-          type: integer
+          schema:
+            type: integer
+          description: "ID of the task to retrieve"
       responses:
         200:
           description: "Task details retrieved successfully."
@@ -414,7 +415,7 @@ paths:
         500:
           description: "Internal server error."
 
-  /task/update_task:
+  /task/update_task/{task_id}:
     put:
       tags:
         - "Task"
@@ -425,8 +426,8 @@ paths:
       produces:
         - application/json
       parameters:
-        - name: task_id
-          in: query
+        - in: path
+          name: task_id
           description: "ID of the task to update"
           required: true
           type: integer
@@ -457,7 +458,7 @@ paths:
         500:
           description: "Internal server error."
 
-  /task/delete_task:
+  /task/delete_task/{task_id}:
     delete:
       tags:
         - "Task"
@@ -466,8 +467,8 @@ paths:
       produces:
         - application/json
       parameters:
-        - name: task_id
-          in: query
+        - in: path
+          name: task_id
           description: "ID of the task to delete"
           required: true
           type: integer
