@@ -8,6 +8,7 @@ from flask_swagger_ui import get_swaggerui_blueprint
 from routes.task import task_blueprint, init_app as init_task_app
 from routes.parent import parent_blueprint, init_app as init_parent_app
 from routes.auth import auth_blueprint, init_app as init_auth_app
+from routes.child import init_app as init_child_app
 from database.models import Parent, db, app
 from flask_login import LoginManager, login_manager
 
@@ -38,6 +39,7 @@ def load_user(user_id):
 init_auth_app(app)
 init_task_app(app)
 init_parent_app(app)
+init_child_app(app)
 
 @app.route("/", methods=["GET"])
 def sendToDocs():
