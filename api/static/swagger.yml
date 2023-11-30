@@ -258,7 +258,7 @@ paths:
         500:
           description: "Internal server error."
 
-  /child/get_child:
+  /child/get_child/{child_id}:
     get:
       tags:
         - "Child"
@@ -268,6 +268,13 @@ paths:
         - BearerAuth: []
       produces:
         - application/json
+      parameters:
+        - in: path
+          name: child_id
+          required: true
+          schema:
+            type: integer
+          description: "ID of the child to retrieve"
       responses:
         200:
           description: "Child details retrieved successfully."
@@ -296,7 +303,7 @@ paths:
         500:
           description: "Internal server error."
 
-  /child/update_child:
+  /child/update_child/{child_id}:
     put:
       tags:
         - "Child"
@@ -309,6 +316,12 @@ paths:
       produces:
         - application/json
       parameters:
+        - in: path
+          name: child_id
+          required: true
+          schema:
+            type: integer
+          description: "ID of the child to update"
         - in: body
           name: child
           description: Updated child data
@@ -338,7 +351,7 @@ paths:
         500:
           description: "Internal server error."
 
-  /child/delete_child:
+  /child/delete_child/{child_id}:
     delete:
       tags:
         - "Child"
@@ -348,6 +361,13 @@ paths:
         - BearerAuth: []
       produces:
         - application/json
+      parameters:
+        - in: path
+          name: child_id
+          required: true
+          schema:
+          type: integer
+          description: "ID of the child to delete"
       responses:
         200:
           description: "Child deleted successfully."
