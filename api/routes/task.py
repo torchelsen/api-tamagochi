@@ -3,7 +3,7 @@ from flask_login import login_required, current_user
 from database.models import Child, Task, db, ChildTask
 
 
-task_blueprint = Blueprint("task", __name__)
+task_blueprint = Blueprint("task", __name__, url_prefix="/task")
 
 def init_app(app):
     # Your initialization logic here
