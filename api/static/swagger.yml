@@ -16,6 +16,8 @@ tags:
     description: "Operations related to children"
   - name: "Task"
     description: "Operations related to tasks"
+  - name: "Item"
+    description: "Operations related to items"
 
 paths:
   /auth/register:
@@ -477,5 +479,182 @@ paths:
           description: "Task deleted successfully."
         404:
           description: "Task not found."
+        500:
+          description: "Internal server error."
+  
+  /item/add_item:
+    post:
+      tags:
+        - "Item"
+      summary: 'Add a new item'
+      description: 'Add a new item with details'
+      consumes:
+        - multipart/form-data
+      produces:
+        - application/json
+      parameters:
+        - name: 'name'
+          in: 'formData'
+          required: true
+          type: 'string'
+          description: 'Name of the item'
+        - name: 'type'
+          in: 'formData'
+          required: true
+          type: 'string'
+          description: 'Type of the item'
+        - name: 'description'
+          in: 'formData'
+          required: true
+          type: 'string'
+          description: 'Description of the item'
+        - name: 'image'
+          in: 'formData'
+          required: true
+          type: 'file'
+          description: 'Image of the item (large binary)'
+        - name: 'price'
+          in: 'formData'
+          required: true
+          type: 'number'
+          format: 'float'
+          description: 'Price of the item'
+      responses:
+        '201':
+          description: 'Item added successfully'
+
+  /item/get_item/{item_id}:
+    get:
+      tags:
+        - "Item"
+      summary: "Get an item by ID"
+      description: "Retrieve details of a specific item by its ID."
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: item_id
+          required: true
+          schema:
+            type: integer
+          description: "ID of the item to retrieve"
+      responses:
+        200:
+          description: "Item details retrieved successfully."
+          schema:
+            type: object
+            properties:
+              id:
+                type: integer
+              name:
+                type: string
+              type:
+                type: string
+              description:
+                type: string
+              image:
+                type: string
+                format: base64
+              price:
+                type: number
+          examples:
+            application/json:
+              id: 1
+              name: "Item Name"
+              type: "Item Type"
+              description: "Item Description"
+              image: "base64 image"
+              price: 10.0
+        404:
+          description: "Item not found."
+        500:
+          description: "Internal server error."
+
+  /item/get_all_items:
+    get:
+      tags:
+        - "Item"
+      summary: "Get all items"
+      description: "Retrieve details of all items."
+      produces:
+        - application/json
+        - multipart/form-data
+      responses:
+        200:
+          description: "All items retrieved successfully."
+        500:
+          description: "Internal server error."
+
+  /item/update_item/{item_id}:
+    put:
+      tags:
+        - "Item"
+      summary: "Update an item by ID"
+      description: "Update details of a specific item by its ID."
+      consumes:
+        - multipart/form-data
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: item_id
+          required: true
+          schema:
+            type: 'integer'
+          description: "ID of the item to update"
+        - name: name
+          in: 'formData'
+          required: false
+          type: 'string'
+          description: "Name of the item"
+        - name: 'type'
+          in: 'formData'
+          required: false
+          type: 'string'
+          description: "Type of the item"
+        - name: 'description'
+          in: 'formData'
+          required: false
+          type: 'string'
+          description: "Description of the item"
+        - name: 'price'
+          in: 'formData'
+          required: false
+          type: 'number'
+          format: 'float'
+          description: "Price of the item"
+        - name: 'image'
+          in: 'formData'
+          required: false
+          type: 'file'
+      responses:
+        200:
+          description: "Item updated successfully."
+        400:
+          description: "Invalid or incomplete data."
+        404:
+          description: "Item not found."
+        500:
+          description: "Internal server error."
+
+  /item/delete_item/{item_id}:
+    delete:
+      tags:
+        - "Item"
+      summary: "Delete an item by ID"
+      description: "Delete a specific item by its ID."
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: item_id
+          description: "ID of the item to delete"
+          required: true
+          type: integer
+      responses:
+        200:
+          description: "Item deleted successfully."
+        404:
+          description: "Item not found."
         500:
           description: "Internal server error."
