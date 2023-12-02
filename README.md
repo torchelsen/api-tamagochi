@@ -60,6 +60,13 @@
     /update_task (PUT)
     /delete_task (DELETE)
 
+### item_routes:
+    /add_item (POST)
+    /get_item (GET)
+    /get_all_items(GET)
+    /update_item(PUT)
+    /delete_item(DELETE)
+
 
 
 
