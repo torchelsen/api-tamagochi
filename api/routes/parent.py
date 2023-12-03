@@ -1,6 +1,8 @@
 from flask import Blueprint, jsonify, request
 from flask_login import login_required, current_user
 from database.models import Parent, Child, Task, db
+from datetime import time
+from dateutil.parser import parse as date_parse
 
 parent_blueprint = Blueprint("parent", __name__, url_prefix="/parent")
 
@@ -79,27 +81,64 @@ def create_child():
 
     return jsonify(status=200, message="Filho adicionado com sucesso.")
 
-# CRIA TASK
 @parent_blueprint.route("/create_task", methods=["POST"])
 @login_required
 def create_task():
     data = request.get_json()
     
-    if not all(data.get(field) for field in ["name", "description", "period", "frequency"]):
+    required_fields = ["name", "description", "start_date", "duration", "day"]
+    if not all(field in data and data[field] for field in required_fields):
         return jsonify(status=400, message="Task inválida ou dados faltando."), 400
 
-    new_task = Task(
-        name=data["name"],
-        description=data["description"],
-        period=data["period"],
-        frequency=data["frequency"],
-        is_visible=data.get("is_visible", True)
-    )
+    try:
+        start_time = date_parse(data["start_date"])
+        duration_str = data["duration"]
+        duration_hours, duration_minutes = map(int, duration_str.split(':'))
+        duration_time = time(hour=duration_hours, minute=duration_minutes)
 
-    db.session.add(new_task)
-    db.session.commit()
+        day = data["day"]
 
-    return jsonify(status=200, message="Task criada com sucesso.")
+        parent_task = Task(
+            name=data["name"],
+            description=data["description"],
+            start_date=start_time,
+            duration=duration_time,
+            day=day,
+            is_visible=data.get("is_visible", True),
+            is_repeatable=data.get("is_repeatable"),
+            task_parent_id=None
+        )
+
+        db.session.add(parent_task)
+        db.session.commit()
+
+        task_parent_id = parent_task.id
+
+        repeat_days = data.get("repeat_days", [])
+        if day not in repeat_days:  
+            repeat_days.append(day)
+
+        task_instances = []
+        for repeat_day in repeat_days:
+            if repeat_day != day:
+                new_task = Task(
+                    name=data["name"],
+                    description=data["description"],
+                    start_date=start_time,
+                    duration=duration_time,
+                    day=repeat_day,
+                    is_visible=data.get("is_visible", True),
+                    is_repeatable=data.get("is_repeatable"),
+                    task_parent_id=task_parent_id
+                )
+                task_instances.append(new_task)
+
+        db.session.add_all(task_instances)
+        db.session.commit()
+
+        return jsonify(status=200, message="Tarefas criadas com sucesso.")
+    except Exception as e:
+        return jsonify(status=500, message="Erro interno ao criar as tarefas.", error=str(e))
 
 # ATRIBUI TASK A CHILD
 @parent_blueprint.route("/assign_task_to_child", methods=["POST"])
@@ -120,7 +159,7 @@ def assign_task_to_child():
         if not child or not task:
             return jsonify(status=400, message="Criança ou tarefa não encontrada.")
 
-        child.tasks.append(task)  # Adiciona a tarefa à lista de tarefas da criança
+        child.tasks.append(task)
         db.session.commit()
 
         return jsonify(status=200, message="Tarefa atribuída à criança com sucesso.")
