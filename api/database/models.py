@@ -2,11 +2,15 @@ from sqlalchemy.orm import relationship
 from flask_login import UserMixin
 from flask import Flask
 from flask_sqlalchemy import SQLAlchemy
+from datetime import datetime
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 db = SQLAlchemy(app)
+
+now = datetime.now()
+date_time = now.strftime("%d/%m/%Y, %H:%M:%S")
 
 class Parent(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
@@ -50,7 +54,6 @@ class StyleTamagochi(db.Model):
     scenario_item = relationship('Item', foreign_keys=[scenario])
 
 
-
 class Inventory(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     child_id = db.Column(db.Integer, db.ForeignKey('child.id'))
@@ -67,21 +70,25 @@ class Tamagochi(db.Model):
     child = relationship('Child')
     style_tamagochi = relationship('StyleTamagochi')
 
-class Task(db.Model, UserMixin):
+class Task(db.Model):
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(50), nullable=False, unique=False)
-    description = db.Column(db.String(255), nullable=False, unique=False)
-    period = db.Column(db.String(20), nullable=False, unique=False)
-    frequency = db.Column(db.String(20), nullable=False, unique=False)
-    is_visible = db.Column(db.Integer, nullable=True, unique=False)
-    version = db.Column(db.Integer, default=1)  # Add a version column
+    name = db.Column(db.String(50), nullable=False)
+    description = db.Column(db.String(255), nullable=False)
+    start_date = db.Column(db.DateTime, nullable=False)
+    duration = db.Column(db.Time, nullable=False)
+    day = db.Column(db.Integer, nullable=False)
+    is_visible = db.Column(db.Boolean, nullable=False, default=True)
+    is_repeatable = db.Column(db.Boolean, nullable=False, default=False)
+    task_parent_id = db.Column(db.Integer, db.ForeignKey('task.id'))
+    version = db.Column(db.Integer, default=1)
+    task_parent = db.relationship('Task', remote_side=[id], backref='child_tasks')
 
 class ChildTask(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     child_id = db.Column(db.Integer, db.ForeignKey('child.id'))
     task_id = db.Column(db.Integer, db.ForeignKey('task.id'))
     done = db.Column(db.Integer, nullable=False, default=0)
-    version = db.Column(db.Integer, default=1)  # Add a version column
+    version = db.Column(db.Integer, default=1)
     child = relationship('Child')
     task = relationship('Task')
 
