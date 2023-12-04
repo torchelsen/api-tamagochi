@@ -79,7 +79,7 @@ def create_child():
     db.session.add(new_child)
     db.session.commit()
 
-    return jsonify(status=200, message="Filho adicionado com sucesso.")
+    return jsonify(status=200, message="Filho adicionado com sucesso.", child_id=f"{new_child.id}")
 
 @parent_blueprint.route("/create_task", methods=["POST"])
 @login_required
@@ -136,7 +136,7 @@ def create_task():
         db.session.add_all(task_instances)
         db.session.commit()
 
-        return jsonify(status=200, message="Tarefas criadas com sucesso.")
+        return jsonify(status=200, message="Tarefas criadas com sucesso.", task_id=f"{parent_task.id}")
     except Exception as e:
         return jsonify(status=500, message="Erro interno ao criar as tarefas.", error=str(e))
 
