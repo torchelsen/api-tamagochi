@@ -39,7 +39,7 @@ def login():
 
     if user and bcrypt.check_password_hash(user.password, data["password"]):
         login_user(user)
-        return jsonify(status=200, message="Logado com sucesso.")
+        return jsonify(status=200, message="Logado com sucesso.", user_id=f"{user.id}")
     else:
         return jsonify(status=400, message="Email ou senha inválidos.")
 
