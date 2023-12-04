@@ -114,7 +114,7 @@ paths:
       summary: "Get parent by ID"
       description: "Retrieve details of a parent by ID."
       security:
-        - BearerAuth: []  # Assuming Bearer token authentication
+        - BearerAuth: []
       parameters:
         - in: path
           name: parent_id
@@ -139,7 +139,7 @@ paths:
       summary: "Get all parents"
       description: "Retrieve details of all parents."
       security:
-        - BearerAuth: []  # Assuming Bearer token authentication
+        - BearerAuth: []  
       responses:
         '200':
           description: "Parents retrieved successfully."
@@ -208,17 +208,30 @@ paths:
                 type: string
               description:
                 type: string
-              period:
+              start_date:
                 type: string
-              frequency:
+                format: date-time
+              duration:
                 type: string
+                format: time
+              repeat_days:
+                type: array
+                items:
+                  type: integer
+                description: List of days to repeat the task (e.g., [1, 3, 5] for Monday, Wednesday, Friday)
+              day:
+                type: integer
               is_visible:
+                type: boolean
+              is_repeatable:
                 type: boolean
             required:
               - name
               - description
-              - period
-              - frequency
+              - start_date
+              - duration
+              - day
+              - is_repeatable
       responses:
         200:
           description: "Task created successfully."
@@ -444,15 +457,66 @@ paths:
                 type: string
               description:
                 type: string
-              period:
+              start_date:
                 type: string
-              frequency:
+                format: date-time
+              duration:
                 type: string
+                format: time
+              day:
+                type: integer
               is_visible:
+                type: boolean
+              is_repeatable:
                 type: boolean
       responses:
         200:
           description: "Task updated successfully."
+        400:
+          description: "Invalid or incomplete data."
+        404:
+          description: "Task not found."
+        500:
+          description: "Internal server error."
+    
+  /task/update_all_tasks/{task_id}:
+    put:
+      tags:
+        - "Task"
+      summary: "Update a task and its child tasks by ID"
+      description: "Update details of a specific task and its child tasks by its ID."
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: task_id
+          description: "ID of the task to update"
+          required: true
+          type: integer
+        - in: body
+          name: task
+          description: "Updated task data"
+          required: true
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+              description:
+                type: string
+              start_date:
+                type: string
+                format: date-time
+              duration:
+                type: string
+                format: time
+              is_visible:
+                type: boolean
+      responses:
+        200:
+          description: "Task and its child tasks updated successfully."
         400:
           description: "Invalid or incomplete data."
         404:
@@ -479,6 +543,28 @@ paths:
           description: "Task deleted successfully."
         404:
           description: "Task not found."
+        500:
+          description: "Internal server error."
+  
+  /task/delete_all_tasks/{task_id}:
+    delete:
+      tags:
+        - "Task"
+      summary: "Delete a task and its child tasks by ID"
+      description: "Delete details of a specific task and its child tasks by its ID."
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: task_id
+          description: "ID of the parent task to delete"
+          required: true
+          type: integer
+      responses:
+        200:
+          description: "Tasks deleted successfully."
+        404:
+          description: "Tasks not found."
         500:
           description: "Internal server error."
   
