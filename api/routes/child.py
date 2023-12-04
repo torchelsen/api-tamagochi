@@ -28,22 +28,22 @@ def get_child(child_id):
     except Exception as e:
         return jsonify(status=500, message="Erro interno ao obter criança.", error=str(e))
     
-@child_blueprint.route("/get_all_childs", methods=["GET"])
+@child_blueprint.route("/get_all_children", methods=["GET"])
 @login_required
-def get_all_childs():
+def get_all_children():
     try:
-        all_childs = Child.query.all()
+        all_children = Child.query.all()
 
-        childs_data = [{
+        children_data = [{
             "id": child.id,
             "name": child.name,
             "surname": child.surname,
             "gender": child.gender,
             "parent_id": child.parent_id,
             # Adicione mais campos conforme necessário
-        } for child in all_childs]
+        } for child in all_children]
 
-        return jsonify(status=200, childs=childs_data)
+        return jsonify(status=200, children=children_data)
     except Exception as e:
         return jsonify(status=500, message="Erro interno ao obter todas as crianças.", error=str(e))
 
