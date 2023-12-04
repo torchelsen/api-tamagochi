@@ -24,6 +24,17 @@
   - Uma aba do navegador vai abrir na rota `http://127.0.0.1:5000`
   - E ser redirecionada para `http://127.0.0.1:5000/docs/`
 
+- Erro em algumas rotas
+  - É esperado que erros ocorram caso esteja utilizando a versão mais
+  recente deste repositório. Isto ocorre pois foram adicionados novos atributos
+  à algumas rotas, e pode ser que seu banco não esteja atualizado.
+  - Para corrigir:
+  - Acesse a pasta `api/instance`
+  - Apague o banco atual `api/instance/database.db`
+  - O novo banco será criado ao executar o servidor novamente.
+  - `py app.py` 
+  - Atenção: o `app.py` fica dentro do diretório `/api` do projeto
+
 ## Tools:
 - Para atualizar o pip:
   - `python -m pip install --upgrade pip`
@@ -58,7 +69,9 @@
     /get_task (GET)
     /get_all_tasks (GET)
     /update_task (PUT)
+    /update_all_tasks (PUT)
     /delete_task (DELETE)
+    /delete_all_tasks (DELETE)
 
 ### item_routes:
     /add_item (POST)
