@@ -12,3 +12,4 @@ Flask-JWT-Extended
 Flask-CORS
 requests
 Flask-Swagger-UI
+python-dateutil
