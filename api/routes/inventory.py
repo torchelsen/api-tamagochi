@@ -1,5 +1,5 @@
 from flask import Blueprint, jsonify, request
-from flask_login import login_required
+from flask_login import login_required, current_user
 from database.models import Inventory, db
 
 
@@ -15,12 +15,19 @@ def init_app(app):
 def add_to_inventory():
     data = request.get_json()
     
-    required_fields = ["child_id", "item_id"]
+    child_id = None
+    children = current_user.children
+    if children:
+        child_id = children[0].id
+
+    if not child_id:
+        return jsonify(status=400, message="Nenhuma criança encontrada."), 400
+    required_fields = ["item_id"]
     if not all(field in data and data[field] for field in required_fields):
         return jsonify(status=400, message="Inventory inválido ou dados faltando."), 400
 
     new_inventory = Inventory(
-        child_id=data["child_id"],
+        child_id=child_id,
         item_id=data["item_id"]
     )
 
@@ -38,6 +45,9 @@ def get_inventory(inventory_id):
         if not inventory:
             return jsonify(status=404, message="Inventory não encontrado.")
         
+        if inventory.child_id != current_user.children[0].id:
+            return jsonify(status=403, message="Você não tem permissão para visualizar este inventory."), 403
+        
         inventory_data = {
             "id": inventory.id,
             "child_id": inventory.child_id,
@@ -49,10 +59,15 @@ def get_inventory(inventory_id):
     except Exception as e:
         return jsonify(status=500, message="Erro interno ao obter inventory.", error=str(e))
 
-@inventory_blueprint.route("/get_all_inventories_by_child/<int:child_id>", methods=["GET"])
+@inventory_blueprint.route("/get_all_inventories_by_child", methods=["GET"])
 @login_required
-def get_all_inventories(child_id):
+def get_all_inventories():
     try:
+        child_id = None
+        children = current_user.children
+        if children:
+            child_id = children[0].id
+
         all_inventories = Inventory.query.filter_by(child_id=child_id).all()
 
         inventory_data = [{
@@ -79,6 +94,9 @@ def update_inventory(inventory_id):
 
         if not inventory:
             return jsonify(status=404, message="Inventory não encontrado.")
+        
+        if inventory.child_id != current_user.child.id:
+            return jsonify(status=403, message="Você não tem permissão para editar este inventário."), 403
 
         inventory.child_id = data.get("child_id", inventory.child_id)
         inventory.item_id = data.get("item_id", inventory.item_id)
@@ -97,6 +115,9 @@ def delete_inventory(inventory_id):
 
         if not inventory:
             return jsonify(status=404, message="Inventory não encontrado.")
+        
+        if inventory.child_id != current_user.child.id:
+            return jsonify(status=403, message="Você não tem permissão para deletar este inventário."), 403
 
         db.session.delete(inventory)
         db.session.commit()
