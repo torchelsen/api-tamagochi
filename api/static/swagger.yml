@@ -1095,12 +1095,9 @@ paths:
           schema:
             type: object
             properties:
-              child_id:
-                type: number
               item_id:
                 type: number
             required:
-              - child_id
               - item_id
       responses:
         200:
@@ -1135,7 +1132,7 @@ paths:
         500:
           description: "Internal server error."
 
-  /inventory/get_all_inventories_by_child/{child_id}:
+  /inventory/get_all_inventories_by_child:
     get:
       tags:
         - "Inventory"
@@ -1145,13 +1142,6 @@ paths:
         - BearerAuth: []
       produces:
         - application/json
-      parameters:
-        - in: path
-          name: child_id
-          required: true
-          schema:
-            type: integer
-          description: "ID of the child to retrieve all inventories"
       responses:
         200:
           description: "All inventories retrieved successfully."
