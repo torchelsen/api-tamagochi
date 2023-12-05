@@ -19,7 +19,9 @@ tags:
   - name: "Item"
     description: "Operations related to items"
   - name: "Tamagochi"
-    description: "Operations related to Tamagochis"
+    description: "Operations related to tamagochis"
+  - name: "StyleTamagochi"
+    description: "Operations related to style_tamagochis"
 
 paths:
   /auth/register:
@@ -908,5 +910,324 @@ paths:
           description: "Unauthorized."
         404:
           description: "Tamagochi not found."
+        500:
+          description: "Internal server error."
+
+  /style_tamagochi/add_style_tamagochi:
+    post:
+      tags:
+        - "StyleTamagochi"
+      summary: "Add a tamagochi style"
+      description: "Create a new tamagochi style for the authenticated parent."
+      security:
+        - BearerAuth: []
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: style_tamagochi
+          description: StyleTamagochi data
+          required: true
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+              head:
+                type: number
+              chest:
+                type: number
+              feet:
+                type: number
+              glasses:
+                type: number
+              scenario:
+                type: number
+            required:
+              - name
+      responses:
+        200:
+          description: "Style Tamagochi added successfully."
+        400:
+          description: "Invalid or incomplete data."
+
+  /style_tamagochi/get_style_tamagochi/{style_tamagochi_id}:
+    get:
+      tags:
+        - "StyleTamagochi"
+      summary: "Get a style_tamagochi"
+      description: "Retrieve details of specific style_tamagochi by ID."
+      security:
+        - BearerAuth: []
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: style_tamagochi_id
+          required: true
+          schema:
+            type: integer
+          description: "ID of the style_tamagochi to retrieve"
+      responses:
+        200:
+          description: "StyleTamagochi details retrieved successfully."
+        401:
+          description: "Unauthorized."
+        404:
+          description: "StyleTamagochi not found."
+        500:
+          description: "Internal server error."
+
+  /style_tamagochi/get_all_style_tamagochis:
+    get:
+      tags:
+        - "StyleTamagochi"
+      summary: "Get all style_tamagochis"
+      description: "Retrieve details of all style_tamagochis."
+      security:
+        - BearerAuth: []
+      produces:
+        - application/json
+      responses:
+        200:
+          description: "All style_tamagochis retrieved successfully."
+        401:
+          description: "Unauthorized."
+        500:
+          description: "Internal server error."
+
+  /style_tamagochi/update_style_tamagochi/{style_tamagochi_id}:
+    put:
+      tags:
+        - "StyleTamagochi"
+      summary: "Update a style_tamagochi"
+      description: "Update details of specific style_tamagochi."
+      security:
+        - BearerAuth: []
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: style_tamagochi_id
+          required: true
+          schema:
+            type: integer
+          description: "ID of the style_tamagochi to update"
+        - in: body
+          name: style_tamagochi
+          description: Update tamagochi data
+          required: true
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+              head:
+                type: number
+              chest:
+                type: number
+              feet:
+                type: number
+              glasses:
+                type: number
+              scenario:
+                type: number
+      responses:
+        200:
+          description: "StyleTamagochi updated successfully."
+        401:
+          description: "Unauthorized."
+        400:
+          description: "Invalid or incomplete data."
+        404:
+          description: "StyleTamagochi not found."
+        500:
+          description: "Internal server error."
+
+  /style_tamagochi/delete_style_tamagochi/{style_tamagochi_id}:
+    delete:
+      tags:
+        - "StyleTamagochi"
+      summary: "Delete a style_tamagochi"
+      description: "Delete specific style_tamagochi by ID."
+      security:
+        - BearerAuth: []
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: style_tamagochi_id
+          required: true
+          schema:
+          type: integer
+          description: "ID of the style_tamagochi to delete"
+      responses:
+        200:
+          description: "StyleTamagochi deleted successfully."
+        401:
+          description: "Unauthorized."
+        404:
+          description: "StyleTamagochi not found."
+        500:
+          description: "Internal server error."
+
+  /inventory/add_to_inventory:
+    post:
+      tags:
+        - "Inventory"
+      summary: "Add items to inventory"
+      description: "Add items to the authenticated child."
+      security:
+        - BearerAuth: []
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: inventory
+          description: Inventory data
+          required: true
+          schema:
+            type: object
+            properties:
+              child_id:
+                type: number
+              item_id:
+                type: number
+            required:
+              - child_id
+              - item_id
+      responses:
+        200:
+          description: "Item added to inventory successfully."
+        400:
+          description: "Invalid or incomplete data."
+
+  /inventory/get_inventory/{inventory_id}:
+    get:
+      tags:
+        - "Inventory"
+      summary: "Get a inventory"
+      description: "Retrieve details of specific inventory by ID."
+      security:
+        - BearerAuth: []
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: inventory_id
+          required: true
+          schema:
+            type: integer
+          description: "ID of the inventory to retrieve"
+      responses:
+        200:
+          description: "Inventory details retrieved successfully."
+        401:
+          description: "Unauthorized."
+        404:
+          description: "Inventory not found."
+        500:
+          description: "Internal server error."
+
+  /inventory/get_all_inventories_by_child/{child_id}:
+    get:
+      tags:
+        - "Inventory"
+      summary: "Get all inventories by child."
+      description: "Retrieve details of all inventories."
+      security:
+        - BearerAuth: []
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: child_id
+          required: true
+          schema:
+            type: integer
+          description: "ID of the child to retrieve all inventories"
+      responses:
+        200:
+          description: "All inventories retrieved successfully."
+        401:
+          description: "Unauthorized."
+        500:
+          description: "Internal server error."
+
+  /inventory/update_inventory/{inventory_id}:
+    put:
+      tags:
+        - "Inventory"
+      summary: "Update a inventory"
+      description: "Update details of specific inventory."
+      security:
+        - BearerAuth: []
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: inventory_id
+          required: true
+          schema:
+            type: integer
+          description: "ID of the inventory to update"
+        - in: body
+          name: inventory
+          description: Update inventory data
+          required: true
+          schema:
+            type: object
+            properties:
+              child_id:
+                type: number
+              item_id:
+                type: number
+            required:
+              - child_id
+              - item_id
+      responses:
+        200:
+          description: "Inventory updated successfully."
+        401:
+          description: "Unauthorized."
+        400:
+          description: "Invalid or incomplete data."
+        404:
+          description: "Inventory not found."
+        500:
+          description: "Internal server error."
+
+  /inventory/delete_inventory/{inventory_id}:
+    delete:
+      tags:
+        - "Inventory"
+      summary: "Delete a inventory"
+      description: "Delete specific inventory by ID."
+      security:
+        - BearerAuth: []
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: inventory_id
+          required: true
+          schema:
+          type: integer
+          description: "ID of the inventory to delete"
+      responses:
+        200:
+          description: "Inventory deleted successfully."
+        401:
+          description: "Unauthorized."
+        404:
+          description: "Inventory not found."
         500:
           description: "Internal server error."
