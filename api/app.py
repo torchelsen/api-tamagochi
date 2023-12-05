@@ -11,6 +11,8 @@ from routes.auth import init_app as init_auth_app
 from routes.child import init_app as init_child_app
 from routes.item import init_app as init_item_app
 from routes.tamagochi import init_app as init_tamagochi_app
+from routes.style_tamagochi import init_app as init_style_tamagochi_app
+from routes.inventory import init_app as init_inventory_app
 from database.models import Parent, db, app
 from flask_login import LoginManager, login_manager
 
@@ -44,6 +46,8 @@ init_child_app(app)
 init_task_app(app)
 init_item_app(app)
 init_tamagochi_app(app)
+init_style_tamagochi_app(app)
+init_inventory_app(app)
 
 @app.route("/", methods=["GET"])
 def sendToDocs():
