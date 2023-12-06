@@ -147,10 +147,14 @@ def assign_task_to_child():
     try:
         data = request.get_json()
 
-        if not data or any(field not in data for field in ["child_id", "task_id"]):
+        if not data or any(field not in data for field in ["task_id"]):
             return jsonify(status=400, message="Dados inválidos ou incompletos.")
 
-        child_id = data["child_id"]
+        child_id = None
+        children = current_user.children
+        if children:
+            child_id = children[0].id
+
         task_id = data["task_id"]
 
         child = Child.query.get(child_id)
@@ -158,6 +162,12 @@ def assign_task_to_child():
 
         if not child or not task:
             return jsonify(status=400, message="Criança ou tarefa não encontrada.")
+
+        child_tasks = Task.query.filter_by(task_parent_id=task_id).all()
+        if child_tasks:
+            for child_task in child_tasks:
+                task_id = child_task.id
+                child.tasks.append(child_task)
 
         child.tasks.append(task)
         db.session.commit()
