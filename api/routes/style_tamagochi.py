@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request
 from flask_login import login_required
-from database.models import StyleTamagochi, db
+from database.models import StyleTamagochi, Item, db
 
 
 style_tamagochi_blueprint = Blueprint("style_tamagochi", __name__, url_prefix="/style_tamagochi")
@@ -15,23 +15,36 @@ def init_app(app):
 def add_style_tamagochi():
     data = request.get_json()
     
-    required_fields = ["name"]
+    required_fields = ["name", "head", "chest", "feet", "glasses", "scenario"]
     if not all(field in data and data[field] for field in required_fields):
         return jsonify(status=400, message="style_tamagochi inválido ou dados faltando."), 400
 
-    new_style_tamagochi = StyleTamagochi(
-        name=data["name"],
-        head=data["head"],
-        chest=data["chest"],
-        feet=data["feet"],
-        glasses=data["glasses"],
-        scenario=data["scenario"],
-    )
+    try:
+        head_item = Item.query.get(data["head"])
+        chest_item = Item.query.get(data["chest"])
+        feet_item = Item.query.get(data["feet"])
+        glasses_item = Item.query.get(data["glasses"])
+        scenario_item = Item.query.get(data["scenario"])
 
-    db.session.add(new_style_tamagochi)
-    db.session.commit()
+        if not all([head_item, chest_item, feet_item, glasses_item, scenario_item]):
+            return jsonify(status=404, message="Um ou mais itens não existem."), 404
 
-    return jsonify(status=200, message="style_tamagochi criado com sucesso.")
+        new_style_tamagochi = StyleTamagochi(
+            name=data["name"],
+            head_item=head_item,
+            chest_item=chest_item,
+            feet_item=feet_item,
+            glasses_item=glasses_item,
+            scenario_item=scenario_item
+        )
+
+        db.session.add(new_style_tamagochi)
+        db.session.commit()
+
+        return jsonify(status=200, message="StyleTamagochi criado com sucesso.")
+    except Exception as e:
+        return jsonify(status=500, message="Erro interno ao criar StyleTamagochi.", error=str(e))
+
 
 @style_tamagochi_blueprint.route("/get_style_tamagochi/<int:style_tamagochi_id>", methods=["GET"])
 @login_required
