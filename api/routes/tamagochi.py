@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request
-from flask_login import login_required
-from database.models import Tamagochi, db
+from flask_login import login_required, current_user
+from database.models import Tamagochi, StyleTamagochi, db
 
 
 tamagochi_blueprint = Blueprint("tamagochi", __name__, url_prefix="/tamagochi")
@@ -15,15 +15,27 @@ def init_app(app):
 def create_tamagochi():
     data = request.get_json()
     
-    required_fields = ["name", "growth", "child_id", "style_tamagochi_id"]
+    child_id = None
+    children = current_user.children
+    if children:
+        child_id = children[0].id
+    else:
+        return jsonify(status=400, message="Nenhuma criança cadastrada."), 400
+
+    required_fields = ["name", "growth", "style_tamagochi_id"]
     if not all(field in data and data[field] for field in required_fields):
         return jsonify(status=400, message="Tamagochi inválido ou dados faltando."), 400
+
+    style_tamagochi_id = data["style_tamagochi_id"]
+    style_tamagochi = StyleTamagochi.query.get(style_tamagochi_id)
+    if not style_tamagochi:
+        return jsonify(status=404, message="StyleTamagochi não encontrado."), 404
 
     new_tamagochi = Tamagochi(
         name=data["name"],
         growth=data["growth"],
-        child_id=data["child_id"],
-        style_tamagochi_id=data["style_tamagochi_id"]
+        child_id=child_id,
+        style_tamagochi_id=style_tamagochi_id
     )
 
     db.session.add(new_tamagochi)
@@ -88,7 +100,6 @@ def update_tamagochi(tamagochi_id):
 
         tamagochi.name = data.get("name", tamagochi.name)
         tamagochi.growth = data.get("growth", tamagochi.growth)
-        tamagochi.child_id = data.get("child_id", tamagochi.child_id)
         tamagochi.style_tamagochi_id = data.get("style_tamagochi_id", tamagochi.style_tamagochi_id)
 
         db.session.commit()
