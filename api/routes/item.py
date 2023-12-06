@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request
 from flask_login import login_required, current_user
-from database.models import Parent, Child, Task, Item, db
+from database.models import Item, db
 import base64
 from io import BytesIO
 
@@ -11,9 +11,9 @@ def init_app(app):
     app.register_blueprint(item_blueprint)
 
 
-@item_blueprint.route("/add_item", methods=["POST"])
+@item_blueprint.route("/create_item", methods=["POST"])
 @login_required
-def add_item():
+def create_item():
     name = request.form.get("name")
     item_type = request.form.get("type")
     description = request.form.get("description")
