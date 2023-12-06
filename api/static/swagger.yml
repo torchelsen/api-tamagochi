@@ -18,10 +18,12 @@ tags:
     description: "Operations related to tasks"
   - name: "Item"
     description: "Operations related to items"
-  - name: "Tamagochi"
-    description: "Operations related to tamagochis"
   - name: "StyleTamagochi"
     description: "Operations related to style_tamagochis"
+  - name: "Tamagochi"
+    description: "Operations related to tamagochis"
+  - name: "Inventory"
+    description: "Operations related to inventories"
 
 paths:
   /auth/register:
@@ -264,12 +266,9 @@ paths:
           schema:
             type: object
             properties:
-              child_id:
-                type: integer
               task_id:
                 type: integer
             required:
-              - child_id
               - task_id
       responses:
         200:
@@ -574,7 +573,7 @@ paths:
         500:
           description: "Internal server error."
   
-  /item/add_item:
+  /item/create_item:
     post:
       tags:
         - "Item"
@@ -751,168 +750,6 @@ paths:
         500:
           description: "Internal server error."
 
-  /tamagochi/create_tamagochi:
-    post:
-      tags:
-        - "Tamagochi"
-      summary: "Create a tamagochi"
-      description: "Create a new Tamagochi for the authenticated parent."
-      security:
-        - BearerAuth: []
-      consumes:
-        - application/json
-      produces:
-        - application/json
-      parameters:
-        - in: body
-          name: tamagochi
-          description: Tamagochi data
-          required: true
-          schema:
-            type: object
-            properties:
-              name:
-                type: string
-              growth:
-                type: number
-              child_id:
-                type: number
-              style_tamagochi_id:
-                type: number
-            required:
-              - name
-              - growth
-              - child_id
-              - style_tamagochi_id
-      responses:
-        200:
-          description: "Child created successfully."
-        400:
-          description: "Invalid or incomplete data."
-
-  /tamagochi/get_tamagochi/{tamagochi_id}:
-    get:
-      tags:
-        - "Tamagochi"
-      summary: "Get a tamagochi"
-      description: "Retrieve details of specific tamagochi by ID."
-      security:
-        - BearerAuth: []
-      produces:
-        - application/json
-      parameters:
-        - in: path
-          name: tamagochi_id
-          required: true
-          schema:
-            type: integer
-          description: "ID of the tamagochi to retrieve"
-      responses:
-        200:
-          description: "Tamagochi details retrieved successfully."
-        401:
-          description: "Unauthorized."
-        404:
-          description: "Tamagochi not found."
-        500:
-          description: "Internal server error."
-
-  /tamagochi/get_all_tamagochis:
-    get:
-      tags:
-        - "Tamagochi"
-      summary: "Get all tamagochis"
-      description: "Retrieve details of all tamagochis."
-      security:
-        - BearerAuth: []
-      produces:
-        - application/json
-      responses:
-        200:
-          description: "All tamagochis retrieved successfully."
-        401:
-          description: "Unauthorized."
-        500:
-          description: "Internal server error."
-
-  /tamagochi/update_tamagochi/{tamagochi_id}:
-    put:
-      tags:
-        - "Tamagochi"
-      summary: "Update a tamagochi"
-      description: "Update details of specific tamagochi."
-      security:
-        - BearerAuth: []
-      consumes:
-        - application/json
-      produces:
-        - application/json
-      parameters:
-        - in: path
-          name: tamagochi_id
-          required: true
-          schema:
-            type: integer
-          description: "ID of the tamagochi to update"
-        - in: body
-          name: tamagochi
-          description: Update tamagochi data
-          required: true
-          schema:
-            type: object
-            properties:
-              name:
-                type: string
-              growth:
-                type: number
-              child_id:
-                type: number
-              style_tamagochi_id:
-                type: number
-            required:
-              - name
-              - growth
-              - child_id
-              - style_tamagochi_id
-      responses:
-        200:
-          description: "Tamagochi updated successfully."
-        401:
-          description: "Unauthorized."
-        400:
-          description: "Invalid or incomplete data."
-        404:
-          description: "Tamagochi not found."
-        500:
-          description: "Internal server error."
-
-  /tamagochi/delete_tamagochi/{tamagochi_id}:
-    delete:
-      tags:
-        - "Tamagochi"
-      summary: "Delete a tamagochi"
-      description: "Delete specific tamagochi by ID."
-      security:
-        - BearerAuth: []
-      produces:
-        - application/json
-      parameters:
-        - in: path
-          name: tamagochi_id
-          required: true
-          schema:
-          type: integer
-          description: "ID of the tamagochi to delete"
-      responses:
-        200:
-          description: "Tamagochi deleted successfully."
-        401:
-          description: "Unauthorized."
-        404:
-          description: "Tamagochi not found."
-        500:
-          description: "Internal server error."
-
   /style_tamagochi/add_style_tamagochi:
     post:
       tags:
@@ -1075,6 +912,163 @@ paths:
         500:
           description: "Internal server error."
 
+  /tamagochi/create_tamagochi:
+    post:
+      tags:
+        - "Tamagochi"
+      summary: "Create a tamagochi"
+      description: "Create a new Tamagochi for the authenticated parent."
+      security:
+        - BearerAuth: []
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: tamagochi
+          description: Tamagochi data
+          required: true
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+              growth:
+                type: number
+              style_tamagochi_id:
+                type: number
+            required:
+              - name
+              - growth
+              - style_tamagochi_id
+      responses:
+        200:
+          description: "Child created successfully."
+        400:
+          description: "Invalid or incomplete data."
+
+  /tamagochi/get_tamagochi/{tamagochi_id}:
+    get:
+      tags:
+        - "Tamagochi"
+      summary: "Get a tamagochi"
+      description: "Retrieve details of specific tamagochi by ID."
+      security:
+        - BearerAuth: []
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: tamagochi_id
+          required: true
+          schema:
+            type: integer
+          description: "ID of the tamagochi to retrieve"
+      responses:
+        200:
+          description: "Tamagochi details retrieved successfully."
+        401:
+          description: "Unauthorized."
+        404:
+          description: "Tamagochi not found."
+        500:
+          description: "Internal server error."
+
+  /tamagochi/get_all_tamagochis:
+    get:
+      tags:
+        - "Tamagochi"
+      summary: "Get all tamagochis"
+      description: "Retrieve details of all tamagochis."
+      security:
+        - BearerAuth: []
+      produces:
+        - application/json
+      responses:
+        200:
+          description: "All tamagochis retrieved successfully."
+        401:
+          description: "Unauthorized."
+        500:
+          description: "Internal server error."
+
+  /tamagochi/update_tamagochi/{tamagochi_id}:
+    put:
+      tags:
+        - "Tamagochi"
+      summary: "Update a tamagochi"
+      description: "Update details of specific tamagochi."
+      security:
+        - BearerAuth: []
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: tamagochi_id
+          required: true
+          schema:
+            type: integer
+          description: "ID of the tamagochi to update"
+        - in: body
+          name: tamagochi
+          description: Update tamagochi data
+          required: true
+          schema:
+            type: object
+            properties:
+              name:
+                type: string
+              growth:
+                type: number
+              style_tamagochi_id:
+                type: number
+            required:
+              - name
+              - growth
+              - child_id
+              - style_tamagochi_id
+      responses:
+        200:
+          description: "Tamagochi updated successfully."
+        401:
+          description: "Unauthorized."
+        400:
+          description: "Invalid or incomplete data."
+        404:
+          description: "Tamagochi not found."
+        500:
+          description: "Internal server error."
+
+  /tamagochi/delete_tamagochi/{tamagochi_id}:
+    delete:
+      tags:
+        - "Tamagochi"
+      summary: "Delete a tamagochi"
+      description: "Delete specific tamagochi by ID."
+      security:
+        - BearerAuth: []
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: tamagochi_id
+          required: true
+          schema:
+          type: integer
+          description: "ID of the tamagochi to delete"
+      responses:
+        200:
+          description: "Tamagochi deleted successfully."
+        401:
+          description: "Unauthorized."
+        404:
+          description: "Tamagochi not found."
+        500:
+          description: "Internal server error."
+
   /inventory/add_to_inventory:
     post:
       tags:
@@ -1176,12 +1170,9 @@ paths:
           schema:
             type: object
             properties:
-              child_id:
-                type: number
               item_id:
                 type: number
             required:
-              - child_id
               - item_id
       responses:
         200:
