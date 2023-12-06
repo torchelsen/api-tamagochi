@@ -45,6 +45,9 @@ def get_inventory(inventory_id):
         if not inventory:
             return jsonify(status=404, message="Inventory não encontrado.")
         
+        if not current_user.children:
+            return jsonify(status=400, message="Você não tem possui nenhum filho cadastrado."), 400
+        
         if inventory.child_id != current_user.children[0].id:
             return jsonify(status=403, message="Você não tem permissão para visualizar este inventory."), 403
         
@@ -92,13 +95,15 @@ def update_inventory(inventory_id):
 
         inventory = Inventory.query.get(inventory_id)
 
+        if not current_user.children:
+            return jsonify(status=400, message="Você não tem possui nenhum filho cadastrado."), 400
+
         if not inventory:
             return jsonify(status=404, message="Inventory não encontrado.")
         
-        if inventory.child_id != current_user.child.id:
+        if inventory.child_id != current_user.children[0].id:
             return jsonify(status=403, message="Você não tem permissão para editar este inventário."), 403
 
-        inventory.child_id = data.get("child_id", inventory.child_id)
         inventory.item_id = data.get("item_id", inventory.item_id)
 
         db.session.commit()
@@ -113,10 +118,13 @@ def delete_inventory(inventory_id):
     try:
         inventory = Inventory.query.get(inventory_id)
 
+        if not current_user.children:
+            return jsonify(status=400, message="Você não tem possui nenhum filho cadastrado."), 400
+
         if not inventory:
             return jsonify(status=404, message="Inventory não encontrado.")
         
-        if inventory.child_id != current_user.child.id:
+        if inventory.child_id != current_user.children[0].id:
             return jsonify(status=403, message="Você não tem permissão para deletar este inventário."), 403
 
         db.session.delete(inventory)
