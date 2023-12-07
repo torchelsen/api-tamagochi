@@ -3,16 +3,16 @@ from flask import Flask, redirect
 from flask import render_template
 from sqlalchemy.exc import SQLAlchemyError
 from flask_login import LoginManager
-from flask_restful import Api
 from flask_swagger_ui import get_swaggerui_blueprint
-from routes.task import task_blueprint, init_app as init_task_app
-from routes.parent import parent_blueprint, init_app as init_parent_app
+from routes.task import init_app as init_task_app
+from routes.parent import init_app as init_parent_app
 from routes.auth import init_app as init_auth_app
 from routes.child import init_app as init_child_app
 from routes.item import init_app as init_item_app
 from routes.tamagochi import init_app as init_tamagochi_app
 from routes.style_tamagochi import init_app as init_style_tamagochi_app
 from routes.inventory import init_app as init_inventory_app
+from routes.reward import init_app as init_reward_app
 from database.models import Parent, db, app
 from flask_login import LoginManager, login_manager
 
@@ -48,6 +48,7 @@ init_item_app(app)
 init_tamagochi_app(app)
 init_style_tamagochi_app(app)
 init_inventory_app(app)
+init_reward_app(app)
 
 @app.route("/", methods=["GET"])
 def sendToDocs():
