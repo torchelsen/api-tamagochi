@@ -26,6 +26,8 @@ tags:
     description: "Operations related to inventories"
   - name: "Reward"
     description: "Operations related to rewards"
+  - name: "TaskReward"
+    description: "Operations related to task_rewards"
 
 paths:
   /auth/register:
@@ -1369,3 +1371,152 @@ paths:
         500:
           description: "Internal server error."
 
+  /task_reward/add_task_reward:
+    post:
+      tags:
+        - "TaskReward"
+      summary: "Add task_reward"
+      description: "Create relationship between task and reward."
+      security:
+        - BearerAuth: []
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: task_reward
+          description: TaskReward data
+          required: true
+          schema:
+            type: object
+            properties:
+              reward_id:
+                type: number
+              task_id:
+                type: number
+            required:
+              - reward_id
+              - task_id
+      responses:
+        200:
+          description: "TaskReward added sucessfully."
+        400:
+          description: "Invalid or incomplete data."
+
+  /task_reward/get_task_reward/{task_reward_id}:
+    get:
+      tags:
+        - "TaskReward"
+      summary: "Get a task_reward"
+      description: "Retrieve details of specific task_reward by ID."
+      security:
+        - BearerAuth: []
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: task_reward_id
+          required: true
+          schema:
+            type: integer
+          description: "ID of the task_reward to retrieve"
+      responses:
+        200:
+          description: "TaskReward details retrieved successfully."
+        401:
+          description: "Unauthorized."
+        404:
+          description: "TaskRewards not found."
+        500:
+          description: "Internal server error."
+
+  /task_reward/get_all_task_rewards:
+    get:
+      tags:
+        - "TaskReward"
+      summary: "Get all task_rewards."
+      description: "Retrieve all task_rewards."
+      security:
+        - BearerAuth: []
+      produces:
+        - application/json
+      responses:
+        200:
+          description: "All task_rewards retrieved successfully."
+        401:
+          description: "Unauthorized."
+        500:
+          description: "Internal server error."
+
+  /task_reward/update_task_reward/{task_reward_id}:
+    put:
+      tags:
+        - "TaskReward"
+      summary: "Update a task_reward"
+      description: "Update details of specific task_reward."
+      security:
+        - BearerAuth: []
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: task_reward_id
+          required: true
+          schema:
+            type: integer
+          description: "ID of the task_reward to update"
+        - in: body
+          name: task_reward
+          description: Update task_reward data
+          required: true
+          schema:
+            type: object
+            properties:
+              reward_id:
+                type: number
+              task_id:
+                type: number
+            required:
+              - reward_id
+              - task_id
+      responses:
+        200:
+          description: "TaskReward updated successfully."
+        401:
+          description: "Unauthorized."
+        400:
+          description: "Invalid or incomplete data."
+        404:
+          description: "TaskReward not found."
+        500:
+          description: "Internal server error."
+
+  /task_reward/delete_task_reward/{task_reward_id}:
+    delete:
+      tags:
+        - "TaskReward"
+      summary: "Delete a task_reward."
+      description: "Delete specific task_reward by ID."
+      security:
+        - BearerAuth: []
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: task_reward_id
+          required: true
+          schema:
+          type: integer
+          description: "ID of the task_reward to delete"
+      responses:
+        200:
+          description: "TaskReward deleted successfully."
+        401:
+          description: "Unauthorized."
+        404:
+          description: "TaskReward not found."
+        500:
+          description: "Internal server error."
