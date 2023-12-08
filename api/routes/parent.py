@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request
 from flask_login import login_required, current_user
-from database.models import Parent, Child, Task, db
+from database.models import Parent, Child, Task, ChildTask, db
 from datetime import time
 from dateutil.parser import parse as date_parse
 
@@ -167,9 +167,11 @@ def assign_task_to_child():
         if child_tasks:
             for child_task in child_tasks:
                 task_id = child_task.id
-                child.tasks.append(child_task)
+                assign_task = ChildTask(child_id=child_id, task_id=task_id, done=0)
+                db.session.add(assign_task)
 
-        child.tasks.append(task)
+        assign_task = ChildTask(child_id=child_id, task_id=task_id, done=0)
+        db.session.add(assign_task)
         db.session.commit()
 
         return jsonify(status=200, message="Tarefa atribuída à criança com sucesso.")
