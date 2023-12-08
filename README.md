@@ -122,6 +122,27 @@
     /update_task_reward (PUT)
     /delete_task_reward (DELETE)
 
+### log_reward_routes:
+    /add_log_reward (POST)
+    /get_log_reward (GET)
+    /get_all_log_rewards (GET)
+    /update_log_reward (PUT)
+    /delete_log_reward (DELETE)
+
+### mood_routes:
+    /add_mood (POST)
+    /get_mood (GET)
+    /get_all_moods (GET)
+    /update_mood (PUT)
+    /delete_mood (DELETE)
+
+### log_mood_routes:
+    /add_log_mood (POST)
+    /get_log_mood (GET)
+    /get_all_log_moods (GET)
+    /update_log_mood (PUT)
+    /delete_log_mood (DELETE)
+
 
 
 
