@@ -86,7 +86,7 @@ class Task(db.Model):
 class ChildTask(db.Model, UserMixin):
     id = db.Column(db.Integer, primary_key=True)
     child_id = db.Column(db.Integer, db.ForeignKey('child.id'))
-    task_id = db.Column(db.Integer, db.ForeignKey('task.id'))
+    task_id = db.Column(db.Integer, db.ForeignKey('task.id'), unique=True)
     done = db.Column(db.Integer, nullable=False, default=0)
     version = db.Column(db.Integer, default=1)
     child = relationship('Child')
