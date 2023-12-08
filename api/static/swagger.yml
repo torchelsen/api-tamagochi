@@ -32,6 +32,8 @@ tags:
     description: "Operations related to task_rewards"
   - name: "LogReward"
     description: "Operations related to log_rewards"
+  - name: "Mood"
+    description: "Operations related to moods"
 
 paths:
   /auth/register:
@@ -1820,3 +1822,153 @@ paths:
           description: "Log not found."
         500:
           description: "Internal server error."
+
+  /mood/add_mood:
+    post:
+      tags:
+        - "Mood"
+      summary: 'Add a new mood'
+      description: 'Add a new mood with details'
+      consumes:
+        - multipart/form-data
+      produces:
+        - application/json
+      parameters:
+        - name: 'name'
+          in: 'formData'
+          required: true
+          type: 'string'
+          description: 'Name of the mood'
+        - name: 'category'
+          in: 'formData'
+          required: true
+          type: 'string'
+          description: 'Category of the mood'
+        - name: 'image'
+          in: 'formData'
+          required: true
+          type: 'file'
+          description: 'Image of the mood (large binary)'
+      responses:
+        '201':
+          description: 'Mood added successfully'
+
+  /mood/get_mood/{mood_id}:
+    get:
+      tags:
+        - "Mood"
+      summary: "Get an mood by ID"
+      description: "Retrieve details of a specific mood by its ID."
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: mood_id
+          required: true
+          schema:
+            type: integer
+          description: "ID of the mood to retrieve"
+      responses:
+        200:
+          description: "Mood details retrieved successfully."
+          schema:
+            type: object
+            properties:
+              id:
+                type: integer
+              name:
+                type: string
+              category:
+                type: string
+              image:
+                type: string
+                format: base64
+          examples:
+            application/json:
+              id: 1
+              name: "mood Name"
+              category: "mood category"
+              image: "base64 image"
+        404:
+          description: "mood not found."
+        500:
+          description: "Internal server error."
+
+  /mood/get_all_moods:
+    get:
+      tags:
+        - "Mood"
+      summary: "Get all moods"
+      description: "Retrieve details of all moods."
+      produces:
+        - application/json
+        - multipart/form-data
+      responses:
+        200:
+          description: "All moods retrieved successfully."
+        500:
+          description: "Internal server error."
+
+  /mood/update_mood/{mood_id}:
+    put:
+      tags:
+        - "Mood"
+      summary: "Update an mood by ID"
+      description: "Update details of a specific mood by its ID."
+      consumes:
+        - multipart/form-data
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: mood_id
+          required: true
+          schema:
+            type: 'integer'
+          description: "ID of the mood to update"
+        - name: 'name'
+          in: 'formData'
+          required: false
+          type: 'string'
+          description: "Name of the mood"
+        - name: 'category'
+          in: 'formData'
+          required: false
+          type: 'string'
+          description: "Category of the mood"
+        - name: 'image'
+          in: 'formData'
+          required: false
+          type: 'file'
+      responses:
+        200:
+          description: "Mood updated successfully."
+        400:
+          description: "Invalid or incomplete data."
+        404:
+          description: "Mood not found."
+        500:
+          description: "Internal server error."
+
+  /mood/delete_mood/{mood_id}:
+    delete:
+      tags:
+        - "Mood"
+      summary: "Delete an mood by ID"
+      description: "Delete a specific mood by its ID."
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: mood_id
+          description: "ID of the mood to delete"
+          required: true
+          type: integer
+      responses:
+        200:
+          description: "Mood deleted successfully."
+        404:
+          description: "Mood not found."
+        500:
+          description: "Internal server error."
+
