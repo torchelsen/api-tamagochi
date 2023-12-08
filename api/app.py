@@ -17,6 +17,7 @@ from routes.task_reward import init_app as init_task_reward_app
 from routes.log_reward import init_app as init_log_reward_app
 from routes.child_task import init_app as init_child_task_app
 from routes.log_reward import init_app as init_log_reward_app
+from routes.mood import init_app as init_mood_app
 from database.models import Parent, db, app
 from flask_login import LoginManager, login_manager
 
@@ -56,6 +57,7 @@ init_reward_app(app)
 init_task_reward_app(app)
 init_child_task_app(app)
 init_log_reward_app(app)
+init_mood_app(app)
 
 @app.route("/", methods=["GET"])
 def sendToDocs():
