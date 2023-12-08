@@ -103,6 +103,7 @@ class LogMood(db.Model):
     mood_id = db.Column(db.Integer, db.ForeignKey('mood.id'))
     child_id = db.Column(db.Integer, db.ForeignKey('child.id'))
     child_task_id = db.Column(db.Integer, db.ForeignKey('child_task.id'))
+    timestamp = db.Column(db.String(20), nullable=False)
     mood = relationship('Mood')
     child = relationship('Child')
     child_task = relationship('ChildTask')
