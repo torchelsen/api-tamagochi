@@ -34,6 +34,8 @@ tags:
     description: "Operations related to log_rewards"
   - name: "Mood"
     description: "Operations related to moods"
+  - name: "LogMood"
+    description: "Operations related to log_moods"
 
 paths:
   /auth/register:
@@ -1972,3 +1974,158 @@ paths:
         500:
           description: "Internal server error."
 
+  /log_mood/add_log_mood:
+    post:
+      tags:
+        - "LogMood"
+      summary: "Create a LogMood"
+      description: "Create a new LogMood."
+      security:
+        - BearerAuth: []
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: body
+          name: LogMood
+          description: LogMood data
+          required: true
+          schema:
+            type: object
+            properties:
+              mood_id:
+                type: number
+              child_id:
+                type: number
+              child_task_id:
+                type: number
+            required:
+              - mood_id
+              - child_id
+              - child_task_id
+      responses:
+        200:
+          description: "Logmood created successfully."
+        400:
+          description: "Invalid or incomplete data."
+
+  /log_mood/get_log_mood/{log_mood_id}:
+    get:
+      tags:
+        - "LogMood"
+      summary: "Get a Logmood"
+      description: "Retrieve details of specific log_mood"
+      security:
+        - BearerAuth: []
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: log_mood_id
+          required: true
+          schema:
+            type: integer
+          description: "ID of the log_mood to retrieve"
+      responses:
+        200:
+          description: "Log details retrieved successfully."
+        401:
+          description: "Unauthorized."
+        404:
+          description: "Log not found."
+        500:
+          description: "Internal server error."
+
+  /log_mood/get_all_log_moods:
+    get:
+      tags:
+        - "LogMood"
+      summary: "Get all log_moods"
+      description: "Retrieve details of all log_moods."
+      security:
+        - BearerAuth: []
+      produces:
+        - application/json
+      responses:
+        200:
+          description: "All log_moods retrieved successfully."
+        401:
+          description: "Unauthorized."
+        500:
+          description: "Internal server error."
+
+  /log_mood/update_log_mood/{log_mood_id}:
+    put:
+      tags:
+        - "LogMood"
+      summary: "Update a log_mood"
+      description: "Update details of the specific log_mood."
+      security:
+        - BearerAuth: []
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: log_mood_id
+          required: true
+          schema:
+            type: integer
+          description: "ID of the log_mood to update"
+        - in: body
+          name: log_mood
+          description: Updated log_mood data
+          required: true
+          schema:
+            type: object
+            properties:
+              mood_id:
+                type: number
+              child_id:
+                type: number
+              child_task_id:
+                type: number
+            required:
+              - mood_id
+              - child_id
+              - child_task_id
+      responses:
+        200:
+          description: "Log updated successfully."
+        401:
+          description: "Unauthorized."
+        400:
+          description: "Invalid or incomplete data."
+        404:
+          description: "Log not found."
+        500:
+          description: "Internal server error."
+
+  /log_mood/delete_log_mood/{log_mood_id}:
+    delete:
+      tags:
+        - "LogMood"
+      summary: "Delete a log_mood"
+      description: "Delete the authenticated log_mood."
+      security:
+        - BearerAuth: []
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: log_mood_id
+          required: true
+          schema:
+          type: integer
+          description: "ID of the log_mood to delete"
+      responses:
+        200:
+          description: "Log deleted successfully."
+        401:
+          description: "Unauthorized."
+        404:
+          description: "Log not found."
+        500:
+          description: "Internal server error."      
