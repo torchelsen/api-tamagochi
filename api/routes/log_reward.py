@@ -77,7 +77,7 @@ def get_all_log_rewards():
 
         return jsonify(status=200, log_rewards=log_reward_data)
     except Exception as e:
-        return jsonify(status=500, message="Erro interno ao obter todas as crianças.", error=str(e))
+        return jsonify(status=500, message="Erro interno ao obter todos Logs", error=str(e))
 
 @log_reward_blueprint.route("/update_log_reward/<int:log_reward_id>", methods=["PUT"])
 @login_required
