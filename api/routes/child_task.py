@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request
 from flask_login import login_required, current_user
-from database.models import ChildTask, Child, Task, db
+from database.models import ChildTask, Child, Task, TaskReward, db
 
 child_task_blueprint = Blueprint("child_task", __name__, url_prefix="/child_task")
 def init_app(app):
