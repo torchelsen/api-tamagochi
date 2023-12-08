@@ -72,6 +72,13 @@
     /update_all_tasks (PUT)
     /delete_task (DELETE)
     /delete_all_tasks (DELETE)
+    /complete_task (PUT)
+
+### child_task_routes:
+    /get_child_task (GET)
+    /get_all_child_tasks (GET)
+    /update_child_tasks (PUT)
+    /delete_child_task (DELETE)
 
 ### item_routes:
     /add_item (POST)
@@ -80,7 +87,40 @@
     /update_item(PUT)
     /delete_item(DELETE)
 
+### style_tamagochi_routes:
+    /add_style_tamagochi (POST)
+    /get_style_tamagochi (GET)
+    /get_all_style_tamagochis (GET)
+    /update_style_tamagochi (PUT)
+    /delete_style_tamagochi (DELETE)
 
+### tamagochi_routes:
+    /create_tamagochi (POST)
+    /get_tamagochi (GET)
+    /get_all_tamagochis (GET)
+    /update_tamagochi (PUT)
+    /delete_tamagochi (DELETE)
+
+### inventory_routes:
+    /add_to_inventory (POST)
+    /get_inventory (GET)
+    /get_all_inventories (GET)
+    /update_inventory (PUT)
+    /delete_inventory (DELETE)
+
+### reward_routes:
+    /create_reward (POST)
+    /get_reward (GET)
+    /get_all_rewards (GET)
+    /update_reward (PUT)
+    /delete_reward (DELETE)
+
+### task_reward_routes:
+    /add_task_reward (POST)
+    /get_task_reward (GET)
+    /get_all_task_rewards (GET)
+    /update_task_reward (PUT)
+    /delete_task_reward (DELETE)
 
 
 
