@@ -16,6 +16,8 @@ tags:
     description: "Operations related to children"
   - name: "Task"
     description: "Operations related to tasks"
+  - name: "ChildTask"
+    description: "Operations related to child_tasks"
   - name: "Item"
     description: "Operations related to items"
   - name: "StyleTamagochi"
@@ -402,6 +404,126 @@ paths:
         500:
           description: "Internal server error."
 
+  /child_task/get_child_task/{child_task_id}:
+    get:
+      tags:
+        - "ChildTask"
+      summary: "Get a child_task"
+      description: "Retrieve details of the authenticated child_task."
+      security:
+        - BearerAuth: []
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: child_task_id
+          required: true
+          schema:
+            type: integer
+          description: "ID of the child_task to retrieve"
+      responses:
+        200:
+          description: "ChildTask details retrieved successfully."
+        401:
+          description: "Unauthorized."
+        404:
+          description: "ChildTask not found."
+        500:
+          description: "Internal server error."
+
+  /child_task/get_all_child_tasks:
+    get:
+      tags:
+        - "ChildTask"
+      summary: "Get all child_tasks"
+      description: "Retrieve details of all child_tasks."
+      security:
+        - BearerAuth: []
+      produces:
+        - application/json
+      responses:
+        200:
+          description: "All child_tasks retrieved successfully."
+        401:
+          description: "Unauthorized."
+        500:
+          description: "Internal server error."
+
+  /child_task/update_child_task/{child_task_id}:
+    put:
+      tags:
+        - "ChildTask"
+      summary: "Update a child_task"
+      description: "Update details of the authenticated child_task."
+      security:
+        - BearerAuth: []
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: child_task_id
+          required: true
+          schema:
+            type: integer
+          description: "ID of the child_task to update"
+        - in: body
+          name: child_task
+          description: Updated child_task data
+          required: true
+          schema:
+            type: object
+            properties:
+              child_id:
+                type: number
+              task_id:
+                type: number
+              done:
+                type: number
+            required:
+              - child_id
+              - task_id
+              - number
+      responses:
+        200:
+          description: "ChildTask updated successfully."
+        401:
+          description: "Unauthorized."
+        400:
+          description: "Invalid or incomplete data."
+        404:
+          description: "ChildTask not found."
+        500:
+          description: "Internal server error."
+
+  /child_task/delete_child_task/{child_task_id}:
+    delete:
+      tags:
+        - "ChildTask"
+      summary: "Delete a child_task"
+      description: "Delete the authenticated child_task."
+      security:
+        - BearerAuth: []
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: child_task_id
+          required: true
+          schema:
+          type: integer
+          description: "ID of the child_task to delete"
+      responses:
+        200:
+          description: "child_task deleted successfully."
+        401:
+          description: "Unauthorized."
+        404:
+          description: "child_task not found."
+        500:
+          description: "Internal server error."
+
   /task/get_task/{task_id}:
     get:
       tags:
@@ -574,6 +696,32 @@ paths:
           description: "Tasks deleted successfully."
         404:
           description: "Tasks not found."
+        500:
+          description: "Internal server error."
+
+  /task/complete_task/{task_id}:
+    put:
+      tags:
+        - "Task"
+      summary: "Mark task as completed"
+      description: "Update the complete status of a specific task by its ID."
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      parameters:
+        - in: path
+          name: task_id
+          description: "ID of the task to complete"
+          required: true
+          type: integer
+      responses:
+        200:
+          description: "Task status updated successfully."
+        400:
+          description: "Invalid or incomplete data."
+        404:
+          description: "Task not found."
         500:
           description: "Internal server error."
   
