@@ -1,6 +1,6 @@
 from flask import Blueprint, jsonify, request
 from flask_login import login_required, current_user
-from database.models import  Task, db
+from database.models import  Task, ChildTask, db
 from datetime import datetime, time
 from dateutil.parser import parse as date_parse
 
@@ -197,3 +197,30 @@ def delete_all_tasks(task_id):
         return jsonify(status=200, message="Tarefas e tarefas filhas excluídas com sucesso.")
     except Exception as e:
         return jsonify(status=500, message="Erro interno ao excluir tarefas e suas tarefas filhas.", error=str(e))
+
+
+@task_blueprint.route("/complete_task/<int:task_id>", methods=["PUT"])
+@login_required
+def complete_task(task_id):
+    try:
+        child_id = None
+        children = current_user.children
+        if children:
+            child_id = children[0].id
+
+        task = Task.query.get(task_id)
+
+        if not task:
+            return jsonify(status=400, message="Tarefa não encontrada.")
+
+        child_task = ChildTask.query.filter_by(child_id=child_id, task_id=task_id).first()
+
+        if not child_task:
+            return jsonify(status=400, message="Associação ChildTask não encontrada.")
+
+        child_task.done = 1
+        db.session.commit()
+
+        return jsonify(status=200, message="Tarefa marcada como feita com sucesso.")
+    except Exception as e:
+        return jsonify(status=500, message="Erro interno ao marcar tarefa como feita.", error=str(e))
