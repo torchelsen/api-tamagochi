@@ -80,12 +80,12 @@ def create_child():
     db.session.commit()
 
     return jsonify(status=200, message="Filho adicionado com sucesso.", child_id=f"{new_child.id}")
-
+#TODO: add type
 @parent_blueprint.route("/create_task", methods=["POST"])
-@login_required
+# @login_required | adicionar mecanismo de tokens para autenticacao no app flutter
 def create_task():
     data = request.get_json()
-    
+    print(data)
     required_fields = ["name", "description", "start_date", "duration", "day"]
     if not all(field in data and data[field] for field in required_fields):
         return jsonify(status=400, message="Task inválida ou dados faltando."), 400
@@ -149,7 +149,7 @@ def assign_task_to_child():
 
         if not data or any(field not in data for field in ["task_id"]):
             return jsonify(status=400, message="Dados inválidos ou incompletos.")
-
+        #TODO: FIX CHILD ID parent_id, child_id
         child_id = None
         children = current_user.children
         if children:
